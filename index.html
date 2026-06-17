@@ -28,10 +28,10 @@
     padding: 28px 16px;
   }
 
-  /* ── LETTER PAGE: 816 × 1056 px ── */
+  /* ── A4 PAGE: 794 × 1123 px ── */
   .page {
-    width: 816px;
-    height: 1056px;
+    width: 794px;
+    height: 1123px;
     background: var(--white);
     box-shadow: 0 16px 60px rgba(0,0,0,.28);
     overflow: hidden;
@@ -345,9 +345,9 @@
 
   @media print {
     body { padding: 0; background: none; }
-    .page { box-shadow: none; width: 8.5in; height: 11in; }
+    .page { box-shadow: none; width: 210mm; height: 297mm; }
     .pdf-btn, .wa-btn { display: none; }
-    @page { size: letter; margin: 0; }
+    @page { size: A4; margin: 0; }
   }
 </style>
 </head>
