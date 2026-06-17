@@ -325,14 +325,43 @@
   .fb-right { display: flex; align-items: center; gap: 5px; font-size: 8.5px; color: var(--red2); font-weight: 600; letter-spacing: .7px; text-transform: uppercase; }
   .fb-dot   { width: 4px; height: 4px; border-radius: 50%; background: var(--red2); }
 
+  /* ── WHATSAPP BUTTON ── */
+  .wa-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #25D366; color: #fff;
+    font-size: 9px; font-weight: 700; letter-spacing: .4px;
+    padding: 5px 10px; border-radius: 5px;
+    text-decoration: none; margin-top: 7px;
+    transition: background .2s;
+  }
+  .wa-btn:hover { background: #1ebe5d; }
+
+  /* ── PDF DOWNLOAD BUTTON (floating, outside page) ── */
+  .pdf-btn {
+    position: fixed; top: 28px; right: 28px; z-index: 999;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--red); color: #fff; border: none; cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 11px; letter-spacing: .5px;
+    padding: 11px 20px; border-radius: 8px;
+    box-shadow: 0 4px 18px rgba(196,30,42,.45);
+    transition: background .2s, transform .15s;
+  }
+  .pdf-btn:hover { background: #a51824; transform: translateY(-1px); }
+
   @media print {
     body { padding: 0; background: none; }
     .page { box-shadow: none; width: 8.5in; height: 11in; }
+    .pdf-btn { display: none; }
     @page { size: letter; margin: 0; }
   }
 </style>
 </head>
 <body>
+<button class="pdf-btn" onclick="window.print()">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  Download PDF
+</button>
 <div class="page">
 
   <!-- ══ HEADER ══ -->
@@ -513,6 +542,10 @@
           <div class="ft-row"><span class="ft-icon">📍</span><span>137/1 Street-12, Khayaban-e-Bukhari, DHA Phase-6, Karachi</span></div>
           <div class="ft-row"><span class="ft-icon">📞</span><span>021-35171513</span></div>
           <div class="ft-row"><span class="ft-icon">✉️</span><span>info@adtpk.com</span></div>
+          <a href="https://wa.me/923041647046" target="_blank" class="wa-btn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.824L.057 23.882l6.214-1.43A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.213-3.688.848.874-3.596-.234-.371A9.818 9.818 0 0112 2.182c5.424 0 9.818 4.394 9.818 9.818 0 5.425-4.394 9.818-9.818 9.818z"/></svg>
+            WhatsApp: 0304-1647046
+          </a>
         </div>
       </div>
       <div class="ft-div"></div>
