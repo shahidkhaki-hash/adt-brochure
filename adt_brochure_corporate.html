@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADT – Network Walkie Talkies</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:  #1a4fa0;
+    --dark:  #0d2a5e;
+    --blue2: #0a1e45;
+    --red:   #c41e2a;
+    --red2:  #e0303e;
+    --white: #ffffff;
+    --light: #f0f4fb;
+    --mid:   #7a8baa;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #c8d0e0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px 16px;
+  }
+
+  /* ── LETTER PAGE: 816 × 1056 px ── */
+  .page {
+    width: 816px;
+    height: 1056px;
+    background: var(--white);
+    box-shadow: 0 16px 60px rgba(0,0,0,.28);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ══════════════ HEADER ══════════════ */
+  .hdr {
+    background: linear-gradient(132deg, var(--blue2) 0%, var(--dark) 50%, #163880 100%);
+    padding: 13px 36px 13px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  /* diagonal stripe texture */
+  .hdr::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -48deg, transparent, transparent 18px,
+      rgba(255,255,255,.022) 18px, rgba(255,255,255,.022) 19px
+    );
+    pointer-events: none;
+  }
+  /* glow blob */
+  .hdr-glow {
+    position: absolute;
+    top: -80px; right: 140px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,30,42,.18) 0%, transparent 68%);
+    pointer-events: none;
+  }
+
+  /* ── top row: logo + badge ── */
+  .hdr-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    position: relative; z-index: 2;
+  }
+
+  .logo-wrap { display: flex; align-items: center; gap: 12px; }
+
+  /* SVG logo container */
+  .logo-svg-box {
+    flex-shrink: 0;
+    width: 115px;
+    overflow: hidden;
+    border-radius: 9px;
+    padding: 6px 10px;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .logo-svg-box img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .logo-text-block strong {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 12.5px;
+    color: var(--white); letter-spacing: .3px;
+  }
+  .logo-text-block span {
+    font-size: 8.5px; color: var(--mid);
+    letter-spacing: 1.3px; text-transform: uppercase;
+  }
+
+  .pta-badge {
+    background: linear-gradient(135deg, var(--red), var(--red2));
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 8.5px;
+    letter-spacing: 1.1px; text-transform: uppercase;
+    padding: 5px 13px; border-radius: 4px;
+    border: 1px solid rgba(255,255,255,.18);
+  }
+
+  /* ── hero row ── */
+  .hdr-hero {
+    position: relative; z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .hdr-title-block { flex: 1; }
+
+  /* Factory scene image — right side of header */
+  .hdr-scene {
+    flex-shrink: 0;
+    width: 240px;
+    height: 110px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px 6px 6px 0;
+  }
+  .hdr-scene img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: 30% center;
+    display: block;
+  }
+  /* left-to-right fade: blends seamlessly into header dark */
+  .hdr-scene::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      var(--dark) 0%,
+      rgba(13,42,94,.55) 35%,
+      transparent 100%);
+    z-index: 1;
+  }
+  /* bottom fade to match stat-strip */
+  .hdr-scene::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+      transparent 55%,
+      rgba(13,42,94,.7) 100%);
+    z-index: 1;
+  }
+
+  .hdr-eyebrow {
+    font-size: 8.5px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--red2); font-weight: 600; margin-bottom: 5px;
+  }
+  .hdr-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900; font-size: 32px;
+    line-height: 1.05; color: var(--white); margin-bottom: 3px;
+  }
+  .hdr-sub {
+    font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--mid); margin-bottom: 9px;
+  }
+  .hdr-tagline {
+    font-size: 11px; color: #b0bdce; line-height: 1.65;
+    max-width: 420px;
+  }
+  .hdr-tagline strong { color: var(--white); font-weight: 600; }
+
+  .hdr-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(196,30,42,.15);
+    border: 1px solid rgba(196,30,42,.3);
+    border-radius: 50px; padding: 5px 12px; margin-top: 9px;
+  }
+  .hdr-pill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red2); }
+  .hdr-pill span { font-size: 9px; letter-spacing: 1.3px; text-transform: uppercase; color: #f08090; font-weight: 600; }
+
+  /* ══════════════ STAT STRIP ══════════════ */
+  .stats {
+    background: var(--red);
+    display: flex; align-items: stretch;
+    flex-shrink: 0;
+  }
+  .stat {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 9px 6px;
+    border-right: 1px solid rgba(255,255,255,.18);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-n { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 17px; color: var(--white); line-height: 1; }
+  .stat-l { font-size: 7.5px; font-weight: 600; letter-spacing: .9px; text-transform: uppercase; color: rgba(255,255,255,.7); margin-top: 3px; }
+
+  /* ══════════════ BODY ══════════════ */
+  .brochure-body {
+    background: var(--light);
+    flex: 1;
+    padding: 10px 36px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    overflow: hidden;
+  }
+
+  .slabel { font-size: 8px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--red); font-weight: 600; margin-bottom: 2px; }
+  .stitle { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13.5px; color: var(--dark); }
+  .srule  { width: 26px; height: 2.5px; background: var(--red); border-radius: 2px; margin: 3px 0 7px; }
+
+  /* ── MODEL CARD ── */
+  /* ── PRODUCT GRID ── */
+  .prod-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px; flex-shrink: 0;
+  }
+  .prod-card {
+    background: var(--white); border-radius: 10px;
+    box-shadow: 0 3px 14px rgba(13,42,94,.09);
+    overflow: hidden; display: flex; flex-direction: column;
+    border-top: 3px solid var(--red);
+  }
+  .prod-img-wrap {
+    background: radial-gradient(ellipse at center, #e8edf8 0%, #f4f6fc 100%);
+    height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 8px; position: relative; overflow: hidden;
+  }
+  .prod-img-wrap img {
+    max-width: 100%; max-height: 84px;
+    object-fit: contain;
+  }
+  .prod-info { padding: 8px 12px 10px; flex: 1; display: flex; flex-direction: column; }
+  .prod-type {
+    font-size: 7.5px; font-weight: 700; letter-spacing: 1.6px;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 3px;
+  }
+  .prod-name {
+    font-family: 'Barlow', sans-serif; font-weight: 600;
+    font-size: 13px; color: var(--dark); line-height: 1.25;
+    margin-bottom: 7px;
+  }
+  .prod-specs { list-style: none; display: flex; flex-direction: column; gap: 3px; margin-top: auto; }
+  .prod-specs li {
+    display: flex; align-items: flex-start; gap: 6px;
+    font-size: 9.5px; color: #3d4f6e; line-height: 1.35;
+  }
+  .prod-specs li::before {
+    content: ''; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--red); flex-shrink: 0; margin-top: 4px;
+  }
+
+  /* ── SECTORS ── */
+  .sectors { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; flex-shrink: 0; }
+  .sec-card {
+    background: var(--white); border-radius: 8px;
+    padding: 9px 8px; text-align: center;
+    box-shadow: 0 2px 9px rgba(13,42,94,.08);
+    border-bottom: 2.5px solid var(--red);
+  }
+  .sec-ico  { font-size: 21px; display: block; margin-bottom: 5px; }
+  .sec-name { font-size: 9px; font-weight: 600; color: var(--dark); letter-spacing: .3px; text-transform: uppercase; line-height: 1.35; }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; flex-shrink: 0; }
+  .info-card { background: var(--white); border-radius: 8px; padding: 11px 13px; box-shadow: 0 2px 9px rgba(13,42,94,.08); }
+  .ic-title  { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 10.5px; color: var(--dark); letter-spacing: .3px; margin-bottom: 9px; display: flex; align-items: center; gap: 6px; }
+  .ic-bar    { width: 3px; height: 12px; background: var(--red); border-radius: 2px; flex-shrink: 0; }
+
+  .feat-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .feat-list li { display: flex; align-items: flex-start; gap: 6px; font-size: 10px; color: #3d4f6e; line-height: 1.4; }
+  .feat-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 4px; }
+
+  .adv-item  { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #eef0f5; }
+  .adv-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .adv-n { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; color: rgba(196,30,42,.2); width: 20px; text-align: right; flex-shrink: 0; line-height: 1.2; }
+  .adv-t { font-size: 10px; color: #3d4f6e; line-height: 1.4; font-weight: 500; }
+
+  /* ── DARK BAND ── */
+  .dark-band {
+    background: linear-gradient(128deg, var(--blue2) 0%, var(--dark) 100%);
+    border-radius: 8px; padding: 10px 18px;
+    display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+    border-left: 4px solid var(--red);
+  }
+  .db-ico   { font-size: 24px; flex-shrink: 0; }
+  .db-body  { flex: 1; }
+  .db-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 11.5px; color: var(--white); margin-bottom: 2px; }
+  .db-desc  { font-size: 9.5px; color: var(--mid); line-height: 1.55; }
+  .db-pill  { background: var(--red); color: var(--white); font-weight: 700; font-size: 9px; padding: 6px 13px; border-radius: 5px; flex-shrink: 0; white-space: nowrap; letter-spacing: .3px; }
+
+  /* ══════════════ FOOTER ══════════════ */
+  .footer { background: var(--dark); flex-shrink: 0; }
+
+  .footer-top { display: flex; align-items: stretch; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .ft-contact { flex: 1; padding: 14px 36px; }
+  .ft-label   { font-size: 7.5px; letter-spacing: 2.3px; text-transform: uppercase; color: var(--red2); font-weight: 600; margin-bottom: 9px; }
+  .ft-rows    { display: flex; flex-direction: column; gap: 5px; }
+  .ft-row     { display: flex; align-items: flex-start; gap: 8px; font-size: 10px; color: #b0bdce; line-height: 1.4; }
+  .ft-icon    { font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+  .ft-div     { width: 1px; background: rgba(255,255,255,.06); flex-shrink: 0; }
+  .ft-right   { padding: 14px 36px; display: flex; flex-direction: column; justify-content: center; gap: 5px; min-width: 210px; }
+  .ft-web     { font-size: 11.5px; color: var(--white); font-weight: 500; }
+  .ft-web span { color: var(--mid); font-size: 9.5px; font-weight: 400; }
+  .ft-demo    { margin-top: 4px; padding: 8px 11px; background: rgba(196,30,42,.1); border: 1px solid rgba(196,30,42,.22); border-radius: 6px; }
+  .ft-demo-t  { font-size: 8px; color: var(--red2); font-weight: 600; letter-spacing: .9px; text-transform: uppercase; margin-bottom: 3px; }
+  .ft-demo-d  { font-size: 9px; color: var(--mid); line-height: 1.5; }
+
+  .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 8px 36px; background: var(--blue2); }
+  .fb-left  { font-size: 8.5px; color: rgba(255,255,255,.28); }
+  .fb-right { display: flex; align-items: center; gap: 5px; font-size: 8.5px; color: var(--red2); font-weight: 600; letter-spacing: .7px; text-transform: uppercase; }
+  .fb-dot   { width: 4px; height: 4px; border-radius: 50%; background: var(--red2); }
+
+  @media print {
+    body { padding: 0; background: none; }
+    .page { box-shadow: none; width: 8.5in; height: 11in; }
+    @page { size: letter; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ HEADER ══ -->
+  <header class="hdr">
+    <div class="hdr-glow"></div>
+
+    <!-- TOP ROW: Logo + PTA badge -->
+    <div class="hdr-top">
+      <div class="logo-wrap">
+        <div class="logo-svg-box">
+          <img src="logo.png" alt="ADT Logo">
+        </div>
+        <div class="logo-text-block">
+          <strong>Alarm &amp; Digital Tracking (Pakistan) Pvt. Ltd.</strong>
+          <span>Enterprise Communications Solutions</span>
+        </div>
+      </div>
+      <div class="pta-badge">✓ &nbsp;PTA Approved &nbsp;|&nbsp; Military Grade</div>
+    </div>
+
+    <!-- HERO ROW -->
+    <div class="hdr-hero">
+      <div class="hdr-title-block">
+        <div class="hdr-eyebrow">Next-Generation Enterprise Communication</div>
+        <h1 class="hdr-title">Network <span>Walkie-Talkies</span></h1>
+        <div class="hdr-sub">With Nationwide Coverage</div>
+        <p class="hdr-tagline">
+          Pakistan's first <strong>PTA Approved, military-grade</strong> network walkie-talkies
+          with powerful dispatch &amp; monitoring software.
+          <strong>No PTA VHF license required.</strong>
+        </p>
+        <div class="hdr-pill">
+          <div class="hdr-pill-dot"></div>
+          <span>Nationwide 4G / LTE Network Infrastructure</span>
+        </div>
+      </div>
+
+      <!-- Factory scene fills the empty right space of the header -->
+      <div class="hdr-scene">
+        <img src="infactory.jpg" alt="Industrial worker using ADT network walkie talkie">
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══ STAT STRIP ══ -->
+  <div class="stats">
+    <div class="stat"><div class="stat-n">4000</div><div class="stat-l">mAh Battery</div></div>
+    <div class="stat"><div class="stat-n">IP65</div><div class="stat-l">Protection Rating</div></div>
+    <div class="stat"><div class="stat-n">2G/3G/4G</div><div class="stat-l">Network</div></div>
+    <div class="stat"><div class="stat-n">∞</div><div class="stat-l">Nationwide Range</div></div>
+    <div class="stat"><div class="stat-n">GPS</div><div class="stat-l">Live Tracking</div></div>
+  </div>
+
+  <!-- ══ BODY ══ -->
+  <div class="brochure-body">
+
+    <!-- MODEL CARD -->
+    <div>
+      <div class="slabel">Our Product Range</div>
+      <div class="stitle">Smart Network Devices</div>
+      <div class="srule"></div>
+      <div class="prod-grid">
+
+        <!-- T199 -->
+        <div class="prod-card">
+          <div class="prod-img-wrap">
+            <picture>
+              <source srcset="T199.avif" type="image/avif">
+              <img src="t199.jpg" alt="Network Walkie Talkie">
+            </picture>
+          </div>
+          <div class="prod-info">
+            <div class="prod-type">Portable · Handheld</div>
+            <div class="prod-name">Network<br>Walkie Talkie</div>
+            <ul class="prod-specs">
+              <li>2G / 3G / 4G · WiFi</li>
+              <li>IP65 Military Grade</li>
+              <li>4000 / 6000 mAh Battery</li>
+              <li>GPS · Nationwide Coverage</li>
+              <li>Android · PTT Push-to-Talk</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- T320 -->
+        <div class="prod-card">
+          <div class="prod-img-wrap">
+            <img src="T320.jpg" alt="4G LTE Network Radio">
+          </div>
+          <div class="prod-info">
+            <div class="prod-type">Smart · Touchscreen</div>
+            <div class="prod-name">4G LTE Smart<br>Network Radio</div>
+            <ul class="prod-specs">
+              <li>4G LTE · Android 7.0</li>
+              <li>2.4" Touch · Dual Camera</li>
+              <li>IP65 · GPS + WiFi + BT</li>
+              <li>3800 mAh Battery</li>
+              <li>Front 2MP · Rear 8MP Camera</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TM7 -->
+        <div class="prod-card">
+          <div class="prod-img-wrap">
+            <img src="tm7.png" alt="Mobile Network Radio">
+          </div>
+          <div class="prod-info">
+            <div class="prod-type">Mobile · Vehicle Mount</div>
+            <div class="prod-name">Mobile Network<br>Radio</div>
+            <ul class="prod-specs">
+              <li>4G LTE · WiFi · Bluetooth</li>
+              <li>Large Touchscreen Display</li>
+              <li>Vehicle / Desktop Mount</li>
+              <li>GPS Navigation</li>
+              <li>Dispatch &amp; PTT Ready</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTORS -->
+    <div>
+      <div class="slabel">Industries Served</div>
+      <div class="stitle">Trusted Across Critical Sectors</div>
+      <div class="srule"></div>
+      <div class="sectors">
+        <div class="sec-card"><span class="sec-ico">🚗</span><div class="sec-name">Fleet &amp;<br>Transport</div></div>
+        <div class="sec-card"><span class="sec-ico">🚒</span><div class="sec-name">Fire &amp;<br>Emergency</div></div>
+        <div class="sec-card"><span class="sec-ico">🏢</span><div class="sec-name">Corporate<br>Security</div></div>
+        <div class="sec-card"><span class="sec-ico">🚑</span><div class="sec-name">Medical &amp;<br>Ambulance</div></div>
+      </div>
+    </div>
+
+    <!-- TWO COLUMN -->
+    <div class="two-col">
+      <div class="info-card">
+        <div class="ic-title"><div class="ic-bar"></div>Core Capabilities</div>
+        <ul class="feat-list">
+          <li>Push-to-talk voice broadcast with HD audio clarity</li>
+          <li>Unlimited device quantity with flexible fee structure</li>
+          <li>Intelligent client-side application adaption</li>
+          <li>Unlimited network expansion capabilities</li>
+          <li>National cluster intercom — connect across Pakistan</li>
+          <li>Group call with automated group information updates</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <div class="ic-title"><div class="ic-bar"></div>Competitive Advantages</div>
+        <div class="adv-item"><div class="adv-n">01</div><div class="adv-t">No PTA VHF License required — operate legally nationwide from day one</div></div>
+        <div class="adv-item"><div class="adv-n">02</div><div class="adv-t">Military-grade IP65 protection — built for demanding field environments</div></div>
+        <div class="adv-item"><div class="adv-n">03</div><div class="adv-t">First &amp; only PTA-approved network walkie-talkie system in Pakistan</div></div>
+        <div class="adv-item"><div class="adv-n">04</div><div class="adv-t">Powerful dispatch &amp; live-map monitoring software included</div></div>
+      </div>
+    </div>
+
+    <!-- DARK BAND -->
+    <div class="dark-band">
+      <div class="db-ico">🗺️</div>
+      <div class="db-body">
+        <div class="db-title">Powerful Dispatch &amp; Monitoring Software</div>
+        <div class="db-desc">Real-time fleet visualization on a nationwide map. Track every device, manage groups, broadcast messages, and monitor operations from a unified dashboard.</div>
+      </div>
+      <div class="db-pill">Live Map Included</div>
+    </div>
+
+  </div><!-- /brochure-body -->
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="ft-contact">
+        <div class="ft-label">Contact Us</div>
+        <div class="ft-rows">
+          <div class="ft-row"><span class="ft-icon">📍</span><span>137/1 Street-12, Khayaban-e-Bukhari, DHA Phase-6, Karachi</span></div>
+          <div class="ft-row"><span class="ft-icon">📞</span><span>021-35171513</span></div>
+          <div class="ft-row"><span class="ft-icon">✉️</span><span>info@adtpk.com</span></div>
+        </div>
+      </div>
+      <div class="ft-div"></div>
+      <div class="ft-right">
+        <div class="ft-label">Online</div>
+        <div class="ft-web">www.adtpk.com<br><span>Official Website &amp; Product Catalog</span></div>
+        <div class="ft-demo">
+          <div class="ft-demo-t">Schedule a Demo</div>
+          <div class="ft-demo-d">Contact our enterprise team for a live demonstration and custom pricing.</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="fb-left">© 2026 Alarm &amp; Digital Tracking (Pakistan) Pvt. Ltd. — All Rights Reserved</div>
+      <div class="fb-right"><div class="fb-dot"></div>ADT · Karachi, Pakistan</div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
