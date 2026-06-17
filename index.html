@@ -327,31 +327,21 @@
   .fb-dot   { width: 4px; height: 4px; border-radius: 50%; background: var(--red2); }
 
   /* ── FLOATING ACTION BUTTONS ── */
-  .wa-btn {
-    position: fixed; top: 80px; right: 28px; z-index: 999;
-    display: flex; align-items: center; gap: 8px;
-    background: #25D366; color: #fff; border: none; cursor: pointer;
+  /* ── SHARED FLOATING BUTTON BASE ── */
+  .pdf-btn, .wa-btn {
+    position: fixed; right: 28px; z-index: 999;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 158px; height: 42px;
+    color: #fff; border: none; cursor: pointer;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700; font-size: 11px; letter-spacing: .5px;
-    padding: 11px 20px; border-radius: 8px;
-    text-decoration: none;
-    box-shadow: 0 4px 18px rgba(37,211,102,.4);
+    border-radius: 8px; text-decoration: none;
     transition: background .2s, transform .15s;
   }
-  .wa-btn:hover { background: #1ebe5d; transform: translateY(-1px); }
-
-  /* ── PDF DOWNLOAD BUTTON (floating, outside page) ── */
-  .pdf-btn {
-    position: fixed; top: 28px; right: 28px; z-index: 999;
-    display: flex; align-items: center; gap: 8px;
-    background: var(--red); color: #fff; border: none; cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700; font-size: 11px; letter-spacing: .5px;
-    padding: 11px 20px; border-radius: 8px;
-    box-shadow: 0 4px 18px rgba(196,30,42,.45);
-    transition: background .2s, transform .15s;
-  }
+  .pdf-btn { top: 28px; background: var(--red); box-shadow: 0 4px 18px rgba(196,30,42,.45); }
+  .wa-btn  { top: 80px; background: #25D366;    box-shadow: 0 4px 18px rgba(37,211,102,.4); }
   .pdf-btn:hover { background: #a51824; transform: translateY(-1px); }
+  .wa-btn:hover  { background: #1ebe5d; transform: translateY(-1px); }
 
   @media print {
     body { padding: 0; background: none; }
